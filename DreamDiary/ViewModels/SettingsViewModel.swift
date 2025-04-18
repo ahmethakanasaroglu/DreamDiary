@@ -12,6 +12,12 @@ class SettingsViewModel: ObservableObject {
     @Published var notificationsEnabled: Bool
     @Published var notificationTime: Date
     
+    // Bilinçli rüya ayarları
+    @Published var lucidDreamingEnabled: Bool
+    @Published var selectedLucidTechnique: LucidDreamingTechnique
+    @Published var lucidDreamReminderTime: Date
+    @Published var showLucidDreamTips: Bool
+    
     private let settingsManager = SettingsManager.shared
     
     init() {
@@ -19,6 +25,12 @@ class SettingsViewModel: ObservableObject {
         self.isDarkModeEnabled = settings.isDarkModeEnabled
         self.notificationsEnabled = settings.notificationsEnabled
         self.notificationTime = settings.notificationTime
+        
+        // Bilinçli rüya ayarlarını yükle
+        self.lucidDreamingEnabled = settings.lucidDreamingEnabled
+        self.selectedLucidTechnique = settings.selectedLucidTechnique
+        self.lucidDreamReminderTime = settings.lucidDreamReminderTime
+        self.showLucidDreamTips = settings.showLucidDreamTips
         
         // Uygulama başlangıcında temayı uygula
         applyTheme()
@@ -30,11 +42,17 @@ class SettingsViewModel: ObservableObject {
         settings.notificationsEnabled = notificationsEnabled
         settings.notificationTime = notificationTime
         
+        // Bilinçli rüya ayarlarını kaydet
+        settings.lucidDreamingEnabled = lucidDreamingEnabled
+        settings.selectedLucidTechnique = selectedLucidTechnique
+        settings.lucidDreamReminderTime = lucidDreamReminderTime
+        settings.showLucidDreamTips = showLucidDreamTips
+        
         settingsManager.settings = settings
     }
     
     func updateNotifications() {
-        if notificationsEnabled {
+        if notificationsEnabled || lucidDreamingEnabled {
             settingsManager.requestNotificationPermission()
             settingsManager.scheduleNotification()
         } else {
@@ -55,6 +73,16 @@ class SettingsViewModel: ObservableObject {
         
         // SwiftUI için uygun görünümü ayarlama (isteğe bağlı)
         NotificationCenter.default.post(name: Notification.Name("ThemeChanged"), object: nil)
+    }
+    
+    // Seçilen tekniğe ait açıklama metni
+    var currentTechniqueDescription: String {
+        return selectedLucidTechnique.description
+    }
+    
+    // Seçilen tekniğe ait ipuçları
+    var currentTechniqueTips: [String] {
+        return selectedLucidTechnique.tips
     }
 }
 

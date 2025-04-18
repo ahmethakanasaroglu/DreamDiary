@@ -4,9 +4,9 @@ import Charts
 struct StatisticsView: View {
     @StateObject private var viewModel = StatisticsViewModel()
     @Environment(\.colorScheme) private var colorScheme
-    @State private var showingAddDreamView = false // Yeni rüya ekle sayfasını göstermek için state ekledim
     @EnvironmentObject private var dreamListViewModel: DreamListViewModel
-
+    @State private var showingAddDreamSheet = false // Sheet için state değişkeni
+    
     
     // Tema renklerini tanımlama
     private var primaryColor: Color {
@@ -59,15 +59,17 @@ struct StatisticsView: View {
             .navigationTitle("İstatistikler")
             .background(
                 colorScheme == .dark ?
-                    Color.black.opacity(0.8) :
+                Color.black.opacity(0.8) :
                     Color.gray.opacity(0.05)
             )
             .onAppear {
                 viewModel.loadStatistics()
             }
             // Yeni rüya ekle sayfasına navigasyon
-            .navigationDestination(isPresented: $showingAddDreamView) {
-                AddDreamView(viewModel: dreamListViewModel)
+            .sheet(isPresented: $showingAddDreamSheet) {
+                NavigationStack {
+                    AddDreamView(viewModel: DreamListViewModel())
+                }
             }
         }
     }
@@ -120,7 +122,7 @@ struct StatisticsView: View {
                                 RoundedRectangle(cornerRadius: 20)
                                     .fill(viewModel.timeRange == range ?
                                           primaryColor :
-                                          Color.gray.opacity(0.15))
+                                            Color.gray.opacity(0.15))
                             )
                             .foregroundColor(viewModel.timeRange == range ? .white : .primary)
                     }
@@ -164,8 +166,8 @@ struct StatisticsView: View {
             }
             
             Button(action: {
-                // Yeni rüya ekleme ekranına yönlendirme
-                showingAddDreamView = true
+                // Sheet ile yeni rüya ekleme
+                showingAddDreamSheet = true
             }) {
                 Label("Yeni Rüya Ekle", systemImage: "plus")
                     .font(.headline)
@@ -360,12 +362,12 @@ struct StatisticsView: View {
     
     private var dominantMoodColor: Color {
         switch dominantMood {
-            case "Mutlu": return .green
-            case "Üzgün": return .blue
-            case "Korkmuş": return .red
-            case "Şaşkın": return .orange
-            case "Sakin": return .teal
-            default: return primaryColor
+        case "Mutlu": return .green
+        case "Üzgün": return .blue
+        case "Korkmuş": return .red
+        case "Şaşkın": return .orange
+        case "Sakin": return .teal
+        default: return primaryColor
         }
     }
     
@@ -399,12 +401,12 @@ struct StatisticsView: View {
     
     private func moodColor(for mood: Dictionary<Dream.DreamMood, Int>.Keys.Element) -> Color {
         switch mood.rawValue {
-            case "Mutlu": return .green
-            case "Üzgün": return .blue
-            case "Korkmuş": return .red
-            case "Şaşkın": return .orange
-            case "Sakin": return .teal
-            default: return .purple
+        case "Mutlu": return .green
+        case "Üzgün": return .blue
+        case "Korkmuş": return .red
+        case "Şaşkın": return .orange
+        case "Sakin": return .teal
+        default: return .purple
         }
     }
     

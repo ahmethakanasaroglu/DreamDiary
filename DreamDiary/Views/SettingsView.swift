@@ -34,24 +34,6 @@ struct SettingsView: View {
                     }
                 }
                 
-                Section(header: Text("Görsel Tercihleri")) {
-                    Picker("Görsel Stili", selection: $viewModel.userPromptPreference) {
-                        Text("Gerçekçi").tag("Gerçekçi")
-                        Text("Sanatsal").tag("Sanatsal")
-                        Text("Soyut").tag("Soyut")
-                        Text("Anime").tag("Anime")
-                    }
-                    .pickerStyle(.menu)
-                    .onChange(of: viewModel.userPromptPreference) { _ in
-                        viewModel.saveSettings()
-                    }
-                    
-                    Toggle("Görselleri Fotoğraflara Kaydet", isOn: $viewModel.saveImagesInPhotos)
-                        .onChange(of: viewModel.saveImagesInPhotos) { _ in
-                            viewModel.saveSettings()
-                        }
-                }
-                
                 Section(header: Text("Hakkında")) {
                     HStack {
                         Text("Versiyon")

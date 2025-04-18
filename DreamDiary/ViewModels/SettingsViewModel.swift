@@ -11,8 +11,6 @@ class SettingsViewModel: ObservableObject {
     }
     @Published var notificationsEnabled: Bool
     @Published var notificationTime: Date
-    @Published var userPromptPreference: String
-    @Published var saveImagesInPhotos: Bool
     
     private let settingsManager = SettingsManager.shared
     
@@ -21,8 +19,6 @@ class SettingsViewModel: ObservableObject {
         self.isDarkModeEnabled = settings.isDarkModeEnabled
         self.notificationsEnabled = settings.notificationsEnabled
         self.notificationTime = settings.notificationTime
-        self.userPromptPreference = settings.userPromptPreference
-        self.saveImagesInPhotos = settings.saveImagesInPhotos
         
         // Uygulama başlangıcında temayı uygula
         applyTheme()
@@ -33,8 +29,6 @@ class SettingsViewModel: ObservableObject {
         settings.isDarkModeEnabled = isDarkModeEnabled
         settings.notificationsEnabled = notificationsEnabled
         settings.notificationTime = notificationTime
-        settings.userPromptPreference = userPromptPreference
-        settings.saveImagesInPhotos = saveImagesInPhotos
         
         settingsManager.settings = settings
     }

@@ -45,7 +45,7 @@ struct DreamListView: View {
             .sheet(isPresented: $showingAddDream) {
                 AddDreamView(viewModel: viewModel)
             }
-            .sheet(isPresented: $showingSettings) {
+            .fullScreenCover(isPresented: $showingSettings) {
                 SettingsView()
             }
         }

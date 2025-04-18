@@ -8,7 +8,7 @@ struct DreamDiaryApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(themeManager.isDarkMode ? .dark : .light)
-                .environmentObject(themeManager)
+                .environmentObject(DreamListViewModel())
         }
     }
 }

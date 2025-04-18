@@ -4,6 +4,9 @@ import Charts
 struct StatisticsView: View {
     @StateObject private var viewModel = StatisticsViewModel()
     @Environment(\.colorScheme) private var colorScheme
+    @State private var showingAddDreamView = false // Yeni rüya ekle sayfasını göstermek için state ekledim
+    @EnvironmentObject private var dreamListViewModel: DreamListViewModel
+
     
     // Tema renklerini tanımlama
     private var primaryColor: Color {
@@ -61,6 +64,10 @@ struct StatisticsView: View {
             )
             .onAppear {
                 viewModel.loadStatistics()
+            }
+            // Yeni rüya ekle sayfasına navigasyon
+            .navigationDestination(isPresented: $showingAddDreamView) {
+                AddDreamView(viewModel: dreamListViewModel)
             }
         }
     }
@@ -157,7 +164,8 @@ struct StatisticsView: View {
             }
             
             Button(action: {
-                // Buraya yeni rüya ekleme ekranına yönlendirme kodu eklenebilir
+                // Yeni rüya ekleme ekranına yönlendirme
+                showingAddDreamView = true
             }) {
                 Label("Yeni Rüya Ekle", systemImage: "plus")
                     .font(.headline)

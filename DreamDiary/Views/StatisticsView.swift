@@ -26,6 +26,14 @@ struct StatisticsView: View {
         colorScheme == .dark ? Color.black.opacity(0.3) : Color.gray.opacity(0.3)
     }
     
+    // Tarih formatları
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -603,7 +611,7 @@ struct StatisticsView: View {
         sectionWithTitle("Öne Çıkan İçgörüler", icon: "lightbulb.fill") {
             VStack(spacing: 16) {
                 insightCard(
-                    text: "En sık rüya gördüğün gün: Cumartesi",
+                    text: "En çok rüya kaydettiğin tarih: \(formattedMostActiveDate)",
                     color: .blue
                 )
                 
@@ -617,6 +625,15 @@ struct StatisticsView: View {
                     color: .orange
                 )
             }
+        }
+    }
+    
+    // Formatlanmış en aktif tarih
+    private var formattedMostActiveDate: String {
+        if let date = viewModel.statistics.mostActiveDreamDate {
+            return dateFormatter.string(from: date)
+        } else {
+            return "Belirsiz"
         }
     }
     
@@ -656,3 +673,12 @@ enum DreamMood: String, CaseIterable {
     case calm = "Sakin"
 }
 
+// MARK: - Model güncelleme için DreamStatistics eklentisi
+extension DreamStatistics {
+    // En aktif rüya tarihi
+    var mostActiveDreamDate: Date? {
+        // dreamsOverTime içinden en yüksek count değerine sahip tarihi bul
+        let maxDateCount = dreamsOverTime.max { $0.count < $1.count }
+        return maxDateCount?.date
+    }
+}

@@ -27,6 +27,8 @@ class ThemeManager: ObservableObject {
     
     @objc private func themeChanged() {
         // Ayarlardan güncel tema durumunu al
-        self.isDarkMode = SettingsManager.shared.settings.isDarkModeEnabled
+        DispatchQueue.main.async {
+            self.isDarkMode = SettingsManager.shared.settings.isDarkModeEnabled
+        }
     }
 }

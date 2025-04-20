@@ -8,7 +8,7 @@ class DreamDetailViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     
     private let ollamaService = OllamaService()
-    private let huggingFaceService = HuggingFaceImageService(token: APIKeys.huggingFace) // Görsel oluşturma için
+    private let openAIService = OpenAIImageService(apiKey: APIKeys.openAI) // OpenAI ile görsel oluşturma
     private let coreDataManager = CoreDataManager.shared
     
     init(dream: Dream) {
@@ -22,7 +22,7 @@ class DreamDetailViewModel: ObservableObject {
         }
         
         do {
-            // OpenAI yerine Ollama servisi çağrısı yap
+            // Ollama servisi ile rüya analizi yap
             let analysis = try await ollamaService.analyzeDream(content: dream.content)
             
             await MainActor.run {
@@ -31,6 +31,9 @@ class DreamDetailViewModel: ObservableObject {
                 self.dream = updatedDream
                 
                 coreDataManager.saveDream(updatedDream)
+                
+                // Veri değişikliğini bildir
+                notifyDataChanged()
                 
                 isAnalyzing = false
             }
@@ -52,8 +55,8 @@ class DreamDetailViewModel: ObservableObject {
             // Rüya içeriğini başlık ve etiketlerle zenginleştir
             let enhancedPrompt = createEnhancedPrompt(content: dream.content, title: dream.title, tags: dream.tags)
             
-            // Hugging Face ile görsel oluştur
-            let imageURL = try await huggingFaceService.generateImage(fromPrompt: enhancedPrompt)
+            // OpenAI ile görsel oluştur
+            let imageURL = try await openAIService.generateImage(fromPrompt: enhancedPrompt)
             
             await MainActor.run {
                 var updatedDream = dream
@@ -62,6 +65,9 @@ class DreamDetailViewModel: ObservableObject {
                 self.dream = updatedDream
                 
                 coreDataManager.saveDream(updatedDream)
+                
+                // Veri değişikliğini bildir
+                notifyDataChanged()
                 
                 isGeneratingImage = false
             }
@@ -88,5 +94,10 @@ class DreamDetailViewModel: ObservableObject {
         }
         
         return enhancedContent
+    }
+    
+    // Veri değişikliğini bildirmek için NotificationCenter kullan
+    private func notifyDataChanged() {
+        NotificationCenter.default.post(name: Notification.Name("DreamDataChanged"), object: nil)
     }
 }

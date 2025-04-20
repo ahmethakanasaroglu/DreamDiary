@@ -3,12 +3,13 @@ import SwiftUI
 @main
 struct DreamDiaryApp: App {
     @StateObject private var themeManager = ThemeManager()
+    @StateObject private var dreamListViewModel = DreamListViewModel()
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .preferredColorScheme(themeManager.isDarkMode ? .dark : .light)
-                .environmentObject(DreamListViewModel())
+            AppFlowManager()
+                .environmentObject(dreamListViewModel)
+                .environmentObject(themeManager)
         }
     }
 }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SearchView: View {
+    @EnvironmentObject var dreamListViewModel: DreamListViewModel
     @StateObject private var viewModel = SearchViewModel()
     @State private var searchText = ""
     @State private var selectedTag: String? = nil
@@ -35,6 +36,7 @@ struct SearchView: View {
             }
             .navigationTitle("Ara")
             .onAppear {
+                viewModel.loadAllDreams()
                 viewModel.loadAllTags()
             }
         }
@@ -126,5 +128,6 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
+            .environmentObject(DreamListViewModel())
     }
 }

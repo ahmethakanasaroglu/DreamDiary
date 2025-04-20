@@ -8,13 +8,27 @@ class SearchViewModel: ObservableObject {
     
     private let coreDataManager = CoreDataManager.shared
     private var allDreams: [Dream] = []
+    private var cancellables = Set<AnyCancellable>()
     
     init() {
         loadAllDreams()
+        
+        // DreamListViewModel'den gelen değişiklikleri dinle
+        NotificationCenter.default.publisher(for: Notification.Name("DreamDataChanged"))
+            .sink { [weak self] _ in
+                self?.loadAllDreams()
+                self?.loadAllTags()
+            }
+            .store(in: &cancellables)
     }
     
     func loadAllDreams() {
         allDreams = coreDataManager.fetchAllDreams()
+        
+        // Aktif bir arama varsa, sonuçları güncelle
+        if !searchResults.isEmpty {
+            refreshSearchResults()
+        }
     }
     
     func loadAllTags() {
@@ -102,5 +116,19 @@ class SearchViewModel: ObservableObject {
     func clearSearch() {
         searchResults = []
         isSearching = false
+    }
+    
+    // Aktif arama sonuçlarını yenile (veri değiştiğinde)
+    private func refreshSearchResults() {
+        // Etiket araması ile son aranan etiket bilgisini korumamız gerekiyor
+        // Bu kullanım örneği için basit bir filtreleme yaptım
+        if !searchResults.isEmpty {
+            let existingIds = Set(searchResults.map { $0.id })
+            
+            // Aynı ID'li rüyaları arama sonuçlarında güncelle
+            searchResults = allDreams.filter { dream in
+                existingIds.contains(dream.id)
+            }
+        }
     }
 }

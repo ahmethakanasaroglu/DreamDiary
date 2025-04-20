@@ -21,11 +21,15 @@ class DreamListViewModel: ObservableObject {
     func addDream(_ dream: Dream) {
         coreDataManager.saveDream(dream)
         loadDreams()
+        // Veri değişikliğini bildir
+        notifyDataChanged()
     }
     
     func updateDream(_ dream: Dream) {
         coreDataManager.saveDream(dream)
         loadDreams()
+        // Veri değişikliğini bildir
+        notifyDataChanged()
     }
     
     func deleteDream(at offsets: IndexSet) {
@@ -34,5 +38,12 @@ class DreamListViewModel: ObservableObject {
             coreDataManager.deleteDream(id: dream.id)
         }
         loadDreams()
+        // Veri değişikliğini bildir
+        notifyDataChanged()
+    }
+    
+    // Veri değişikliğini bildirmek için NotificationCenter kullan
+    private func notifyDataChanged() {
+        NotificationCenter.default.post(name: Notification.Name("DreamDataChanged"), object: nil)
     }
 }

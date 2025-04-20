@@ -177,6 +177,11 @@ struct StatisticsView: View {
                     .foregroundColor(.white)
                     .cornerRadius(12)
             }
+            .sheet(isPresented: $showingAddDreamSheet) {
+                NavigationStack {
+                    AddDreamView(viewModel: dreamListViewModel)
+                }
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: 400)
         .padding(.vertical, 40)

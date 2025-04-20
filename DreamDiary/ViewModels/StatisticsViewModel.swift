@@ -1,10 +1,14 @@
 import Foundation
 import SwiftUI
+import Combine
 
 class StatisticsViewModel: ObservableObject {
     @Published var statistics: DreamStatistics = DreamStatistics()
     @Published var isLoading: Bool = false
     @Published var timeRange: TimeRange = .month
+    
+    // Rüya listesinin değişikenlerini dinlemek için cancellable
+    private var cancellables = Set<AnyCancellable>()
     
     enum TimeRange: String, CaseIterable {
         case week = "Hafta"
@@ -28,6 +32,23 @@ class StatisticsViewModel: ObservableObject {
     }
     
     private let coreDataManager = CoreDataManager.shared
+    
+    init() {
+        // DreamListViewModel'den bildirimler için NotificationCenter ekle
+        NotificationCenter.default.publisher(for: Notification.Name("DreamDataChanged"))
+            .sink { [weak self] _ in
+                self?.loadStatistics()
+            }
+            .store(in: &cancellables)
+        
+        // Time range değiştiğinde istatistikleri tekrar yükle
+        $timeRange
+            .dropFirst()
+            .sink { [weak self] _ in
+                self?.loadStatistics()
+            }
+            .store(in: &cancellables)
+    }
     
     func loadStatistics() {
         isLoading = true

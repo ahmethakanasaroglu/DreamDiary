@@ -1,26 +1,26 @@
 import SwiftUI
 
 struct DreamListView: View {
-    @StateObject private var viewModel = DreamListViewModel()
+    @EnvironmentObject var dreamListViewModel: DreamListViewModel
     @State private var showingAddDream = false
     @State private var showingSettings = false
 
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.dreams.isEmpty {
+                if dreamListViewModel.dreams.isEmpty {
                     Text("Henüz hiç rüya eklenmemiş.")
                         .foregroundColor(.secondary)
                         .font(.title3)
                         .padding()
                 } else {
                     List {
-                        ForEach(viewModel.dreams) { dream in
+                        ForEach(dreamListViewModel.dreams) { dream in
                             NavigationLink(destination: DreamDetailView(dream: dream)) {
                                 DreamRowView(dream: dream)
                             }
                         }
-                        .onDelete(perform: viewModel.deleteDream)
+                        .onDelete(perform: dreamListViewModel.deleteDream)
                     }
                 }
             }
@@ -43,10 +43,14 @@ struct DreamListView: View {
                 }
             }
             .sheet(isPresented: $showingAddDream) {
-                AddDreamView(viewModel: viewModel)
+                AddDreamView(viewModel: dreamListViewModel)
             }
             .fullScreenCover(isPresented: $showingSettings) {
                 SettingsView()
+            }
+            .onAppear {
+                // View görünür olduğunda rüyaları yükle
+                dreamListViewModel.loadDreams()
             }
         }
     }
@@ -95,5 +99,6 @@ struct DreamRowView: View {
 struct DreamListView_Previews: PreviewProvider {
     static var previews: some View {
         DreamListView()
+            .environmentObject(DreamListViewModel())
     }
 }

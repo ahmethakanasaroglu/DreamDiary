@@ -119,7 +119,7 @@ struct DreamDetailView: View {
                             .font(.body)
                     }
                     
-                    analysisSection(title: "Tekrarlayan Öğeler", items: analysis.recurringElements)
+                    analysisSection(title: "Vurgulanan Öğeler", items: analysis.recurringElements)
                     
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Psikolojik Perspektif")

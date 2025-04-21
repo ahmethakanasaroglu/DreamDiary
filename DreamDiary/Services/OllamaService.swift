@@ -86,7 +86,7 @@ class OllamaService {
             1. Temalar: Rüyanın ana temalarını belirle (örn. korku, özgürlük, kaçış)
             2. Yorumlama: Rüyanın genel bir yorumu
             3. Duygusal Ton: Rüya anlatımındaki duygu tonunu belirle
-            4. Vurgulanan Öğeler: Varsa tekrar eden sembol veya öğeler
+            4. Vurgulanan Öğeler: Metin içinde birden fazla kez geçen sembol veya öğeler (eğer yoksa boş bırakın)
             5. Psikolojik Perspektif: Rüyanın psikolojik açıdan yorumu
 
             Rüya Anlatımı: \(content)

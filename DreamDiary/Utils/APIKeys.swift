@@ -3,5 +3,5 @@ import Foundation
 struct APIKeys {
     // MARK: - Gerçek API anahtarınızı buraya ekleyin
     static let geminiAI = "AIzaSyDj-ua-9osvlv6A6HPKy3bVgEHMLRdBi8M"
-    static let openAI = "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"
+    static let openAI = "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"
 }

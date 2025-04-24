@@ -1,6 +1,8 @@
 import SwiftUI
 import Charts
 
+// $ işareti değişkenin bindingini (bağlayıcısını) temsil eder.
+
 struct StatisticsView: View {
     @StateObject private var viewModel = StatisticsViewModel()
     @Environment(\.colorScheme) private var colorScheme
@@ -177,7 +179,7 @@ struct StatisticsView: View {
                     .foregroundColor(.white)
                     .cornerRadius(12)
             }
-            .sheet(isPresented: $showingAddDreamSheet) {
+            .sheet(isPresented: $showingAddDreamSheet) {  // $ işareti değişkenin bindingini (bağlayıcısını) temsil eder.
                 NavigationStack {
                     AddDreamView(viewModel: dreamListViewModel)
                 }
